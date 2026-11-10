@@ -1,0 +1,59 @@
+/* SecureBank 3D Cash Animation (visual only; backend is source of truth) */
+:root {
+  --atm-bg: #0b1f3a;
+  --atm-accent: #1d4ed8;
+  --atm-slot: #020617;
+  --cash-note-a: #d97706;
+  --cash-note-b: #b45309;
+  --cash-ink: #1e293b;
+}
+.cash-stage { margin: 1rem 0 0; border: 1px solid var(--border-color, #e2e8f0); border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#f8fafc,#eef2ff); }
+body.dark .cash-stage { background: linear-gradient(180deg,#0f172a,#1e293b); border-color:#334155; }
+.cash-stage-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.65rem .85rem; background:#fff; border-bottom:1px solid var(--border-color,#e2e8f0); }
+body.dark .cash-stage-header { background:#111827; border-bottom-color:#334155; }
+.cash-stage-title { font-size:.95rem; font-weight:600; margin:0; color: var(--text-dark,#0f172a); }
+body.dark .cash-stage-title { color:#e5e7eb; }
+.cash-viewport { position:relative; height:220px; background: radial-gradient(ellipse at 50% 20%, #1e293b 0%, #020617 70%); }
+.cash-canvas, .cash-fallback { position:absolute; inset:0; width:100%; height:100%; }
+.cash-fallback { display:none; align-items:center; justify-content:center; color:#cbd5e1; font-size:.95rem; }
+.cash-fallback.show { display:flex; }
+.cash-atm { position:relative; width:160px; height:120px; margin:0 auto; top:58px; background: linear-gradient(180deg,#334155,#1f2937); border-radius:10px 10px 6px 6px; box-shadow:0 10px 24px rgba(0,0,0,.35); border:1px solid #475569; }
+.cash-atm::before { content:''; position:absolute; left:16px; right:16px; top:14px; height:34px; border-radius:4px; background:#0b1220; border:1px solid #334155; }
+.cash-slot { position:absolute; left:28px; right:28px; bottom:22px; height:10px; border-radius:4px; background:var(--atm-slot); box-shadow: inset 0 2px 6px rgba(0,0,0,.8); }
+.note { position:absolute; left:50%; width:54px; height:26px; margin-left:-27px; border-radius:3px; background: linear-gradient(135deg,var(--cash-note-a),var(--cash-note-b)); border:1px solid rgba(0,0,0,.18); box-shadow:0 3px 8px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:.8rem; opacity:0; }
+.note::after { content:'₹'; }
+@keyframes deposit-in { 0%{ transform: translateY(70px) rotate(-8deg) scale(.95); opacity:0 } 15%{opacity:1} 70%{ transform: translateY(-6px) rotate(0deg) scale(1); opacity:1 } 100%{ transform: translateY(-18px) rotate(0deg) scale(.85); opacity:0 } }
+@keyframes withdraw-out { 0%{ transform: translateY(-18px) scale(.85); opacity:0 } 15%{opacity:1} 70%{ transform: translateY(52px) rotate(6deg) scale(1); opacity:1 } 100%{ transform: translateY(78px) rotate(10deg) scale(.96); opacity:0 } }
+.anim-deposit .note.n1{ animation: deposit-in 1.1s ease-in-out .05s 1 both; }
+.anim-deposit .note.n2{ animation: deposit-in 1.1s ease-in-out .28s 1 both; }
+.anim-deposit .note.n3{ animation: deposit-in 1.1s ease-in-out .51s 1 both; }
+.anim-deposit .note.n4{ animation: deposit-in 1.1s ease-in-out .74s 1 both; }
+.anim-deposit .note.n5{ animation: deposit-in 1.1s ease-in-out .97s 1 both; }
+.anim-withdraw .note.n1{ animation: withdraw-out 1.1s ease-in-out .05s 1 both; }
+.anim-withdraw .note.n2{ animation: withdraw-out 1.1s ease-in-out .28s 1 both; }
+.anim-withdraw .note.n3{ animation: withdraw-out 1.1s ease-in-out .51s 1 both; }
+.anim-withdraw .note.n4{ animation: withdraw-out 1.1s ease-in-out .74s 1 both; }
+.anim-withdraw .note.n5{ animation: withdraw-out 1.1s ease-in-out .97s 1 both; }
+.cash-status { padding:.75rem .85rem; font-size:.95rem; }
+.cash-status .processing { color:#1d4ed8; font-weight:500; }
+body.dark .cash-status .processing { color:#93c5fd; }
+.tx-receipt { margin-top:.5rem; padding:.7rem .85rem; border-radius:10px; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; }
+body.dark .tx-receipt { background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.35); color:#a7f3d0; }
+.tx-error { margin-top:.5rem; padding:.7rem .85rem; border-radius:10px; background:#fef2f2; border:1px solid #fecaca; color:#991b1b; }
+body.dark .tx-error { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.35); color:#fecaca; }
+.balance-counter { font-variant-numeric: tabular-nums; font-weight:700; }
+.sr-only-live { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+@media (prefers-reduced-motion: reduce) {
+  .note { animation: none !important; opacity: 1; transform: translateY(30px); }
+  .anim-deposit .note, .anim-withdraw .note { opacity: .85; }
+}
+@media (max-width: 640px) { .cash-viewport { height: 190px; } .cash-atm { transform: scale(.92); transform-origin: top center; } }
+/* Amount-based visual enhancements (visual only) */
+.cash-viewport { overflow: hidden; }
+.cash-float-amount { position:absolute; left:50%; top:42%; transform:translate(-50%,-50%); font-weight:800; font-size:1.35rem; letter-spacing:.2px; padding:.2rem .7rem; border-radius:999px; background:rgba(2,6,23,.55); color:#fff; pointer-events:none; opacity:0; z-index:3; text-shadow:0 2px 8px rgba(0,0,0,.35); }
+.cash-float-amount.pos { color:#86efac; border:1px solid rgba(134,239,172,.35); }
+.cash-float-amount.neg { color:#fca5a5; border:1px solid rgba(252,165,165,.35); }
+.cash-float-amount.run { animation: cash-float-up 1.45s ease-out 1 both; }
+.cash-float-amount.show-static { opacity:1; transform:translate(-50%,-50%); }
+@keyframes cash-float-up { 0%{ opacity:0; transform:translate(-50%,-20%) scale(.92) } 15%{opacity:1} 70%{opacity:1; transform:translate(-50%,-70%) scale(1.02)} 100%{opacity:0; transform:translate(-50%,-105%) scale(1)} }
+@media (prefers-reduced-motion: reduce){ .cash-float-amount.run{ animation:none; opacity:1; transform:translate(-50%,-50%); } }
